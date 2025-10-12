@@ -42,7 +42,7 @@ A pocket sized device with which you communicate with other using ESP-NOW protoc
 # Preview (screen)
 currently there are **3** main screens and **3** supporting screens.
 ## Loading screen
-![splash screen](image/loading screen.png)
+![splash screen](Images/Loading_screen.jpg)
 It appears when the device boots in this screen the joystick Calibration is done.
 ## keyboard screen
 massage can be typed is sent from this screen.
