@@ -45,9 +45,12 @@ currently there are **3** main screens and **3** supporting screens.
 ![splash screen](Images/Loading_screen.jpg)
 It appears when the device boots in this screen the joystick Calibration is done.
 ## keyboard screen
+![Keyboard screen](Images/keyboard.jpg)
 massage can be typed is sent from this screen.
 ## Inbox screen 
+![Inbox screen](Images/Inbox.jpg)
 all received massages can be seen here in this screen.
 ## settings screen
+![Settings screen](Images/Settings.jpg)
 all settings are present in this screen which can be changed. It includes settings like..
-> Username, Buzzer toggle, Led toggle, Screen timeout toggle, Max number of massage, theme toggle
+> Username, Buzzer toggle, Led toggle, Screen timeout toggle, Max number of massage.
