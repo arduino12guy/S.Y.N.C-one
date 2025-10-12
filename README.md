@@ -45,7 +45,7 @@ currently there are **3** main screens and **3** supporting screens.
 ![splash screen](Images/Loading_screen.jpg)
 It appears when the device boots in this screen the joystick Calibration is done.
 ## keyboard screen
-![Keyboard screen](Images/keyboard.jpg)
+![Keyboard screen](Images/Keyboard.jpg)
 massage can be typed is sent from this screen.
 ## Inbox screen 
 ![Inbox screen](Images/Inbox.jpg)
