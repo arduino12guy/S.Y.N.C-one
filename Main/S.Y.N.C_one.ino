@@ -1,3 +1,12 @@
+//   /$$$$$$  /$$     /$$ /$$   /$$      /$$$$$$                                     
+//  /$$__  $$|  $$   /$$/| $$$ | $$     /$$__  $$                                    
+// | $$  \__/ \  $$ /$$/ | $$$$| $$    | $$  \__/        /$$$$$$  /$$$$$$$   /$$$$$$ 
+// |  $$$$$$   \  $$$$/  | $$ $$ $$    | $$             /$$__  $$| $$__  $$ /$$__  $$
+//  \____  $$   \  $$/   | $$  $$$$    | $$            | $$  \ $$| $$  \ $$| $$$$$$$$
+//  /$$  \ $$    | $$    | $$\  $$$    | $$    $$      | $$  | $$| $$  | $$| $$_____/
+// |  $$$$$$//$$ | $$ /$$| $$ \  $$ /$$|  $$$$$$/      |  $$$$$$/| $$  | $$|  $$$$$$$
+//  \______/|__/ |__/|__/|__/  \__/|__/ \______/        \______/ |__/  |__/ \_______/
+
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -50,11 +59,11 @@ String typedText = "";
 String userName = "User"; // Default username
 String currentInput = "";
 bool buzzerOn = false; // Variable to track buzzer state
-bool ledOn = false; // New variable to track LED state
-bool isScreenOn = true; // New variable to track screen state
-bool sleepModeOn = true; // New variable to toggle screen sleep mode
-bool colorMode = false; // false for Dark Mode, true for Light Mode
-unsigned long lastActivityTime = 0; // New variable to track inactivity
+bool ledOn = false; // Variable to track LED state
+bool isScreenOn = true; // Variable to track screen state
+bool sleepModeOn = true; // Variable to toggle screen sleep mode
+// Removed colorMode variable as requested
+unsigned long lastActivityTime = 0; // Variable to track inactivity
 
 // Define inactivity timeout (e.g., 30 seconds = 30000 ms)
 const unsigned long INACTIVITY_TIMEOUT_MS = 30000;
@@ -76,7 +85,8 @@ ScreenState currentScreen = KEYBOARD_SCREEN;
 int settingsCursorY = 0; // Cursor position for settings screen
 int settingsScrollY = 0; // New variable for vertical scrolling
 
-const int SETTINGS_OPTIONS_COUNT = 6; // Total number of settings options
+// Updated SETTINGS_OPTIONS_COUNT (removed Light Mode)
+const int SETTINGS_OPTIONS_COUNT = 5; // Total number of settings options
 const int VISIBLE_OPTIONS_COUNT = 4; // Number of options to display on the screen at once
 int MAX_MESSAGES = 4; // Maximum number of messages to keep in history
 String messageHistory[20]; // Array to store messages (size is max possible limit)
@@ -150,17 +160,7 @@ void loadMessageLimit() {
   preferences.end();
 }
 
-void saveColorMode() {
-  preferences.begin("user-data", false);
-  preferences.putBool("color_mode", colorMode);
-  preferences.end();
-}
-
-void loadColorMode() {
-  preferences.begin("user-data", true);
-  colorMode = preferences.getBool("color_mode", false); // Default to Dark Mode
-  preferences.end();
-}
+// Removed saveColorMode and loadColorMode functions
 
 // ==== AUDIO FUNCTIONS ====
 void beep() {
@@ -217,51 +217,49 @@ void drawSettingsScreen() {
     display.drawFastHLine(0, 15, SCREEN_WIDTH, SSD1306_WHITE);
 
     display.setTextSize(1);
-    // Array of settings options
+    // Array of settings options (Removed "Light Mode")
     String settingsOptions[] = {
       "Edit Username",
       "Buzzer",
       "Sleep Mode",
       "LED",
-      "Max Messages",
-      "Light Mode"
+      "Max Messages"
     };
 
-    // Array of settings statuses
+    // Array of settings statuses (Removed "Light Mode")
     String settingsStatus[] = {
       userName,
       String(buzzerOn ? "ON" : "OFF"),
       String(sleepModeOn ? "ON" : "OFF"),
       String(ledOn ? "ON" : "OFF"),
-      String(MAX_MESSAGES),
-      String(colorMode ? "ON" : "OFF")
+      String(MAX_MESSAGES)
     };
-    
+
     // Display only the visible options based on the scroll position
     for (int i = 0; i < VISIBLE_OPTIONS_COUNT; i++) {
         int optionIndex = settingsScrollY + i;
         if (optionIndex < 0 || optionIndex >= SETTINGS_OPTIONS_COUNT) {
             continue; // Skip if out of bounds
         }
-        
+
         int optionY = 18 + i * 11;
-        
+
         // Draw the cursor for the selected option
         if (settingsCursorY == optionIndex) {
-            display.fillRect(0, optionY, SCREEN_WIDTH, 11, colorMode ? SSD1306_BLACK : SSD1306_WHITE);
-            display.setTextColor(colorMode ? SSD1306_WHITE : SSD1306_BLACK);
-            display.setCursor(5, optionY + 2);
-            display.print(settingsOptions[optionIndex]);
-            display.setCursor(95, optionY + 2);
-            display.print(settingsStatus[optionIndex]);
+            // Selected: Inverted (Black text on White background)
+            display.fillRect(0, optionY, SCREEN_WIDTH, 11, SSD1306_WHITE);
+            display.setTextColor(SSD1306_BLACK);
         } else {
-            display.fillRect(0, optionY, SCREEN_WIDTH, 11, colorMode ? SSD1306_WHITE : SSD1306_BLACK);
-            display.setTextColor(colorMode ? SSD1306_WHITE : SSD1306_BLACK);
-            display.setCursor(5, optionY + 2);
-            display.print(settingsOptions[optionIndex]);
-            display.setCursor(95, optionY + 2);
-            display.print(settingsStatus[optionIndex]);
+            // Non-Selected: Normal (White text on Black background)
+            display.fillRect(0, optionY, SCREEN_WIDTH, 11, SSD1306_BLACK);
+            display.setTextColor(SSD1306_WHITE);
         }
+        
+        // Print the option and status
+        display.setCursor(5, optionY + 2);
+        display.print(settingsOptions[optionIndex]);
+        display.setCursor(95, optionY + 2);
+        display.print(settingsStatus[optionIndex]);
     }
 }
 
@@ -275,7 +273,7 @@ void drawMessagesScreen() {
     display.setTextSize(1);
     const int startY = 18;
     const int lineHeight = 10;
-    
+
     // Display all messages in a simple list
     for (int i = 0; i < messageCount; i++) {
         int yPos = startY + (i * lineHeight); 
@@ -294,11 +292,11 @@ void drawMessageLimitScreen() {
     display.setTextSize(1);
     display.setCursor(0, 20);
     display.println("Current Limit:");
-    
+
     display.setTextSize(3);
     display.setCursor(SCREEN_WIDTH/2 - 10, SCREEN_HEIGHT/2 - 10);
     display.print(MAX_MESSAGES);
-    
+
     display.setTextSize(1);
     display.setCursor(0, 50);
     display.println("Use joystick to change");
@@ -308,8 +306,9 @@ void drawMessageLimitScreen() {
 
 void updateDisplay() {
     display.clearDisplay();
-    display.invertDisplay(colorMode); // Invert the entire display based on the colorMode
-    
+    // Removed display.invertDisplay(colorMode); 
+    display.invertDisplay(false); // Ensure it's in normal (dark) mode
+
     switch(currentScreen) {
         case KEYBOARD_SCREEN:
             drawTypedText(typedText);
@@ -407,7 +406,7 @@ void setup() {
     loadSleepModeState(); // Load the saved sleep mode state
     loadLedState(); // Load the saved LED state
     loadMessageLimit(); // Load the saved message limit
-    loadColorMode(); // Load the saved color mode
+    // Removed loadColorMode()
 
     pinMode(JOYSTICK_SW_PIN, INPUT_PULLUP);
     pinMode(button, INPUT_PULLUP);
@@ -434,7 +433,7 @@ void setup() {
     }
 
     esp_now_register_recv_cb(onDataRecv);
-    
+
     // Set the initial activity time
     lastActivityTime = millis();
 }
@@ -447,13 +446,13 @@ void loop() {
     display.ssd1306_command(SSD1306_DISPLAYOFF);
     isScreenOn = false;
   }
-  
+
   // Joystick Button (debounced)
   bool currentJoystickBtn = (digitalRead(JOYSTICK_SW_PIN) == LOW);
   if (currentJoystickBtn != lastJoystickBtnState) {
     lastDebounceTime = millis();
   }
-  
+
   if ((millis() - lastDebounceTime) > debounceDelay) {
     if (currentJoystickBtn != joystickBtn) {
       joystickBtn = currentJoystickBtn;
@@ -494,10 +493,8 @@ void loop() {
             saveLedState();
           } else if (settingsCursorY == 4) { // Change Max Messages
             currentScreen = MESSAGE_LIMIT_SCREEN;
-          } else if (settingsCursorY == 5) { // Toggle Light/Dark Mode
-            colorMode = !colorMode;
-            saveColorMode();
           }
+          // Removed settingsCursorY == 5 (Light Mode)
         } else if (currentScreen == MESSAGE_LIMIT_SCREEN) {
             saveMessageLimit();
             currentScreen = SETTINGS_SCREEN;
@@ -506,7 +503,7 @@ void loop() {
     }
   }
   lastJoystickBtnState = currentJoystickBtn;
-  
+
   // Read joystick values
   joystickX = analogRead(JOYSTICK_X_PIN);
   joystickY = analogRead(JOYSTICK_Y_PIN);
@@ -604,9 +601,15 @@ void loop() {
         currentScreen = KEYBOARD_SCREEN;
         break;
       case PROFILE_SCREEN:
+        // If in profile screen (editing username), toggle button takes back to settings
+        userName = currentInput; // Save current input temporarily before leaving
+        saveUsername(); 
         currentScreen = SETTINGS_SCREEN;
+        currentInput = "";
         break;
       case MESSAGE_LIMIT_SCREEN:
+        // If in message limit screen, toggle button takes back to settings
+        saveMessageLimit();
         currentScreen = SETTINGS_SCREEN;
         break;
     }
@@ -635,11 +638,13 @@ void loop() {
         currentInput = "";
       }
     } else if (currentScreen == PROFILE_SCREEN) {
+      // Main button saves username and returns to settings
       userName = currentInput;
       saveUsername(); 
-      currentScreen = SETTINGS_SCREEN; // Return to settings after saving
+      currentScreen = SETTINGS_SCREEN; 
       currentInput = "";
     } else if (currentScreen == MESSAGE_LIMIT_SCREEN) {
+      // Main button saves message limit and returns to settings
       saveMessageLimit();
       currentScreen = SETTINGS_SCREEN;
     }
@@ -661,7 +666,7 @@ void onDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
     currentScreen = MESSAGES_SCREEN; // Launch messages screen
   }
   lastActivityTime = millis();
-  
+
   if (ledOn) {
     digitalWrite(led, HIGH);
     beep(); // Beep when message is received
