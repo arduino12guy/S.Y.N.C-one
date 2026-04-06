@@ -37,6 +37,7 @@ A close range communication device made with **esp32** .based on **ESP-NOW proto
 | 3.3v | VCC |
 | D35 | X-axis |
 | D34 | Y-axis |
+| D27 | Button |
 
 >[!Note]
 >connecting led at pin 2 is not necessary since built-in led is already connected to it.
