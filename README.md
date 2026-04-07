@@ -2,6 +2,8 @@
 A pocket sized device with which you communicate with other using ESP-NOW protocol.
 
 A close range communication device made with **esp32** .based on **ESP-NOW protocol**.It works on a broadcasting method to send and receive a massage.
+
+#video - https://youtu.be/O5Z86GRWwE0
 # S.Y.N.C. (Social Yielded Network Communicator)
 # connections
 | esp32 | oled |
