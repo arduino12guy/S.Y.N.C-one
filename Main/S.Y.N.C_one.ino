@@ -85,7 +85,6 @@ ScreenState currentScreen = KEYBOARD_SCREEN;
 int settingsCursorY = 0; // Cursor position for settings screen
 int settingsScrollY = 0; // New variable for vertical scrolling
 
-// Updated SETTINGS_OPTIONS_COUNT (removed Light Mode)
 const int SETTINGS_OPTIONS_COUNT = 5; // Total number of settings options
 const int VISIBLE_OPTIONS_COUNT = 4; // Number of options to display on the screen at once
 int MAX_MESSAGES = 4; // Maximum number of messages to keep in history
@@ -217,7 +216,6 @@ void drawSettingsScreen() {
     display.drawFastHLine(0, 15, SCREEN_WIDTH, SSD1306_WHITE);
 
     display.setTextSize(1);
-    // Array of settings options (Removed "Light Mode")
     String settingsOptions[] = {
       "Edit Username",
       "Buzzer",
@@ -226,7 +224,6 @@ void drawSettingsScreen() {
       "Max Messages"
     };
 
-    // Array of settings statuses (Removed "Light Mode")
     String settingsStatus[] = {
       userName,
       String(buzzerOn ? "ON" : "OFF"),
@@ -306,8 +303,7 @@ void drawMessageLimitScreen() {
 
 void updateDisplay() {
     display.clearDisplay();
-    // Removed display.invertDisplay(colorMode); 
-    display.invertDisplay(false); // Ensure it's in normal (dark) mode
+    display.invertDisplay(false);
 
     switch(currentScreen) {
         case KEYBOARD_SCREEN:
@@ -494,7 +490,6 @@ void loop() {
           } else if (settingsCursorY == 4) { // Change Max Messages
             currentScreen = MESSAGE_LIMIT_SCREEN;
           }
-          // Removed settingsCursorY == 5 (Light Mode)
         } else if (currentScreen == MESSAGE_LIMIT_SCREEN) {
             saveMessageLimit();
             currentScreen = SETTINGS_SCREEN;
